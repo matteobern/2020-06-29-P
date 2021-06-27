@@ -8,6 +8,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import it.polito.tdp.PremierLeague.model.Adiacenza;
 import it.polito.tdp.PremierLeague.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -39,7 +41,7 @@ public class FXMLController {
     private TextField txtMinuti; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbMese"
-    private ComboBox<?> cmbMese; // Value injected by FXMLLoader
+    private ComboBox<Integer> cmbMese; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbM1"
     private ComboBox<?> cmbM1; // Value injected by FXMLLoader
@@ -52,12 +54,36 @@ public class FXMLController {
 
     @FXML
     void doConnessioneMassima(ActionEvent event) {
-    	
-    }
+    	try {
+    	      int minuti=Integer.parseInt(this.txtMinuti.getText());
+    	    	int month=this.cmbMese.getValue();
+    	    	this.model.creaGrafo(month,minuti);
+    	    	
+    	int max =this.model.getAdiacenze(month, minuti).get(0).getPeso();
+    	for(Adiacenza a : this.model.getAdiacenze(month, minuti)) {
+    	  if(a.getPeso()==max)
+		  this.txtResult.appendText("\n"+model.getMatch(a.getM1()).getTeamHomeNAME()+"vs"+model.getMatch(a.getM1()).getTeamAwayNAME()+"-"+model.getMatch(a.getM2()).getTeamHomeNAME()+"vs"+model.getMatch(a.getM2()).getTeamAwayNAME()+"  "+a.getPeso());
+    	}
+    	}
+    	catch(NumberFormatException e) {
+    		this.txtResult.setText("Inserire minuti validi");
+    		return;
+    	}
+    	}
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
+    	try {
+      int minuti=Integer.parseInt(this.txtMinuti.getText());
+    	int month=this.cmbMese.getValue();
+    	this.model.creaGrafo(month,minuti);
     	
+    	
+    	}
+    	catch(NumberFormatException e) {
+    		this.txtResult.setText("Inserire minuti validi");
+    		return;
+    	}
     }
 
     @FXML
@@ -79,6 +105,9 @@ public class FXMLController {
     
     public void setModel(Model model) {
     	this.model = model;
+    	for(int i=1;i<13;i++)
+    		this.cmbMese.getItems().add(i);
+    		
   
     }
     
